@@ -1,0 +1,4 @@
+services:
+#    isi_pop_site.example:
+#        class: IsiPop\SiteBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
