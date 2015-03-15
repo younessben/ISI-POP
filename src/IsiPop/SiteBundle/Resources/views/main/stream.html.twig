@@ -20,7 +20,7 @@
 
 <script>
   var streamURL = "{{ streamUrl }}";
-  var subs = { {% for subtitle in subtitles %}"{{ subtitle.lang }}":"{{ subtitle.url }}"{% if not loop.last %},{% endif %}{% endfor %} }
+  var subs = { {% for subtitle in subtitles %}"{{ subtitle.lang }}":"{{ subtitle.urlStream }}"{% if not loop.last %},{% endif %}{% endfor %} }
 
   var languageMapping = {
     'albanian': 'sq',

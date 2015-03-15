@@ -2,9 +2,9 @@ isi_pop_site_homepage:
     path:     /
     defaults: { _controller: IsiPopSiteBundle:Default:index }
     
-isi_pop_site_stream:
-    path: /stream/{id}-{file}
-    defaults: { _controller: IsiPopSiteBundle:Stream:index }
+isi_pop_site_stream_yts:
+    path: /stream/yts/{id}-{url}
+    defaults: { _controller: IsiPopSiteBundle:Stream:yts }
     requirements:
         _method:  GET
         id:  \d+

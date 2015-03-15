@@ -1,8 +1,5 @@
-<%= partial('layout_header'); %>
-  <body>
-    <div class="container">
-      <%- render(); %>
-    </div>
-  </body>
-<%= partial('layout_footer'); %>
+{% extends 'IsiPopSiteBundle:layouts:application.html.twig' %}
 
+{% block container %}
+    <h1 class="lead">{{ errorMessage }}</h1>
+{% endblock %}
