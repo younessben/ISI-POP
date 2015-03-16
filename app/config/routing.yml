@@ -1,3 +1,7 @@
+isi_pop_admin:
+    resource: "@IsiPopAdminBundle/Resources/config/routing.yml"
+    prefix:   /
+
 isi_pop_site:
     resource: "@IsiPopSiteBundle/Resources/config/routing.yml"
     prefix:   /
