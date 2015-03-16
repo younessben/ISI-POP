@@ -15,7 +15,7 @@
         <img class="media-object" src="<%= movies[i].medium_cover_image %>" alt="<%= movies[i].title %>"></a>
 		
 		<div class="media-body">
-		<p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_stream' , {'id': 3  , 'file': "abc" }) }}" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+		<p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_stream_yts' , {'id': 3  , 'url': "abc" }) }}" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
         <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?http://www.imdb.com/title/<%= movies[i].imdb_code %>" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
 
 		<div class="well well-sm">
