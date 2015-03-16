@@ -102,6 +102,7 @@ class StreamController extends Controller
         
            
 
+        // TODO Create command for windows and linux compatible
         // execute Command
         // Windows usage debug
       //$Process = new \Symfony\Component\Process\ProcessBuilder(array('C:\Program Files\nodejs\peerflix.cmd' ,$torrent,'-p '. $HOST->getPortStream()));

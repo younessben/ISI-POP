@@ -1,6 +1,6 @@
 isi_pop_site_homepage:
     path:     /
-    defaults: { _controller: IsiPopSiteBundle:Default:index }
+    defaults: { _controller: IsiPopSiteBundle:Yts:index }
     
 isi_pop_site_stream_yts:
     path: /stream/yts/{id}-{url}
