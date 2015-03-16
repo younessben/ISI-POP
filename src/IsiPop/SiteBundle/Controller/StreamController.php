@@ -15,11 +15,9 @@ class StreamController extends Controller
 {
     public function ytsAction($id,$url)
     {   
-        $torrent = urldecode($url);
+        $torrent = $url;
         // Data test only
         // Bilbo 3
-        $id = 3792;
-        $torrent = "https://yts.re/torrent/download/EA974AA1432B16C764DA618453CEBCFF7812EAAD.torrent";
         
         // Create a host object
         $HOST = new Host();
