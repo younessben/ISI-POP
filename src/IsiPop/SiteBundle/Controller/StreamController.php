@@ -16,9 +16,6 @@ class StreamController extends Controller
     public function ytsAction($id,$url)
     {   
         $torrent = urldecode($url);
-        var_dump($torrent);
-        // Data test only
-        // Bilbo 3
         
         // Create a host object
         $HOST = new Host();
@@ -99,29 +96,11 @@ class StreamController extends Controller
         
         }
         
-           
-
-        // TODO Create command for windows and linux compatible
-        // execute Command
-        // Windows usage debug
-      //$Process = new \Symfony\Component\Process\ProcessBuilder(array('C:\Program Files\nodejs\peerflix.cmd' ,$torrent,'-p '. $HOST->getPortStream()));
-       
-        
-        
-        // linux command
-     //  $Process = new \Symfony\Component\Process\ProcessBuilder(array('nohup','peerflix' ,$torrent,'-p '. $HOST->getPortStream(),'> /dev/null 2>&1 & echo $!'));
-    //   $Process->getProcess()->start();          
-      
-    
-    //   while($Process->getProcess()->isRunning()) {}
-       
-       
-      
-       
         
         $command = 'nohup peerflix '.$torrent.' -p '.$HOST->getPortStream().' > /dev/null 2>&1 & echo $!';
         exec($command ,$op);
         $pid = (int)$op[0];
+        
         
         
                 return $this->render('IsiPopSiteBundle:main:stream.html.twig',array(
@@ -130,15 +109,29 @@ class StreamController extends Controller
         
         
     }
-}
-
-   // return $this->render('IsiPopSiteBundle:layouts:errors.html.twig',array(
-        //    'errorMessage'  => 'Error message to display'))  ;
+    
+    public function OtherAction($id,$url)
+    {   
+        $torrent = urldecode($url);
+        $torrent = "https://www.t411.io/torrents/download/?id=5124496";
         
-        // TEST PORT RETURN TO SHOW ERROR
-        /*
-         * if($port==-1)
-         * {
-         * NO PORT AVAILABLE
-         * }
-         */
+        // Create a host object
+        $HOST = new Host();
+        $HOST->setHostname($this->getRequest()->getHost());
+        $HOST->setPortHost($this->getRequest()->getPort());
+        $HOST->setPortStream(8889, 8999);
+        
+        
+        $command = 'nohup peerflix '.$torrent.' -p '.$HOST->getPortStream().' > /dev/null 2>&1 & echo $!';
+        var_dump($command);
+        exec($command ,$op);
+        $pid = (int)$op[0];
+        
+        
+                return $this->render('IsiPopSiteBundle:main:stream.html.twig',array(
+            'streamUrl'  => $HOST->getStreamUrl(),
+            'subtitles' => null));
+        
+        
+    }
+}

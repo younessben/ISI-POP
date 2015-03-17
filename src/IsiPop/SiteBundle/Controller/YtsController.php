@@ -26,8 +26,7 @@ class YtsController extends Controller
     
     private function ReturnMovieList($uri,$page,$search)
     {
-        var_dump($uri);
-         $response = Request::get($uri)->send();    
+        $response = Request::get($uri)->send();    
         $movieList  = [];
         
         foreach($response->body->data->movies as $m)
