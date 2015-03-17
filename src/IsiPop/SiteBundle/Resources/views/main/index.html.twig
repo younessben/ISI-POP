@@ -14,11 +14,11 @@
 		<div class="panel-body">
         
 		<div class="media movie">
-        <a class="pull-left" href="{{ path('isi_pop_site_stream_yts' , {'id': movie.id , 'url': movie.url }) }}">
+        <a class="pull-left" href="{{ path('isi_pop_site_stream_yts' , {'id': movie.id , 'url': movie.id }) }}">
         <img class="media-object" src="{{ movie.cover }}" alt="{{ movie.title }}"></a>
 		
 		<div class="media-body">
-		<p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_stream_yts' , {'id': movie.id , 'url': movie.url }) }}" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+		<p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_stream_yts' , {'id': movie.id , 'url': movie.id }) }}" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
         <p><a class="btn btn-xs btn-default" href="http://www.imdb.com/title/{{ movie.imdb }}" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
 
 		<div class="well well-sm">
