@@ -15,7 +15,8 @@ class StreamController extends Controller
 {
     public function ytsAction($id,$url)
     {   
-        $torrent = $url;
+        $torrent = urldecode($url);
+        var_dump($torrent);
         // Data test only
         // Bilbo 3
         
