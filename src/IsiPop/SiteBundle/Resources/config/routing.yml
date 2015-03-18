@@ -5,6 +5,13 @@ isi_pop_site_homepage:
         _method: GET
         page: \d+
 
+isi_pop_site_other:
+    path:     /other/
+    defaults: { _controller: IsiPopSiteBundle:Other:index }
+    requirements:
+        _method: GET
+        page: \d+
+
 isi_pop_site_homepage_Form_search:
     path:   /form/
     defaults: { _controller: IsiPopSiteBundle:Yts:searchForm }
@@ -24,6 +31,8 @@ isi_pop_site_stream_other:
     requirements:
         _method:  GET
         id:  \d+
+        
+
         
 
       
