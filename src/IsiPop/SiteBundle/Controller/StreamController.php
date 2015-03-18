@@ -5,9 +5,12 @@ namespace IsiPop\SiteBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use \Httpful\Request;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 use IsiPop\SiteBundle\Entity\Host;
-use IsiPop\SiteBundle\Entity\Process;
 use IsiPop\SiteBundle\Entity\Movie;
 use IsiPop\SiteBundle\Entity\Subtitle;
 
@@ -15,13 +18,28 @@ class StreamController extends Controller
 {
     public function ytsAction($id,$url)
     {   
+        // define serializer
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+        
+        // Decode URL Torrent
         $torrent = urldecode($url);
         
+        // Get tempory folder
+        $tempory_folder = sys_get_temp_dir();
+        
+      
         // Create a host object
         $HOST = new Host();
         $HOST->setHostname($this->getRequest()->getHost());
         $HOST->setPortHost($this->getRequest()->getPort());
         $HOST->setPortStream(8889, 8999);
+        
+        // Get tempory file
+        
+        
         
         // Get Movie information
         $uri = "https://yts.re/api/v2/movie_details.json?with_images=true&movie_id=".$id;
@@ -41,6 +59,32 @@ class StreamController extends Controller
         $Movie->setPeers($response->body->data->torrents[0]->peers);
         $Movie->setCover($response->body->data->images->medium_cover_image);
         $Movie->setImdb($response->body->data->imdb_code);
+        $Movie->setUrl($torrent);
+        $Movie->setPort($HOST->getPortStream());
+        
+          // define tempory file
+        $tempory_movie_data = $tempory_folder.'/isipop.data';
+        $movieList = [];
+        $isInTmp = false;
+        if(file_exists($tempory_movie_data))
+        {
+        $json = file_get_contents($tempory_movie_data);
+        $jsondecode = json_decode($json);
+        foreach ($jsondecode as $jsons)
+        {
+        $Movietmp = $serializer->deserialize(json_encode($jsons), 'IsiPop\SiteBundle\Entity\Movie','json');
+        array_push($movieList, $Movietmp);
+        
+        if($Movietmp->getUrl()==$torrent)
+        {
+            // this file is always in stream
+            $Movie = $Movietmp;
+            $isInTmp = true;
+            $HOST->setPortStream2($Movie->getPort());
+        }
+        }
+        
+        }
         
         
         // Get subtitles
@@ -57,7 +101,7 @@ class StreamController extends Controller
         $listSubtitles = $response->body->subs->$Imdb;
         
         
-        $tempory_folder = sys_get_temp_dir();
+        
         $tmpZip = $tempory_folder."/TMP.ZIP";
         
         foreach ($listSubtitles as $key => $val) {
@@ -98,12 +142,22 @@ class StreamController extends Controller
         
         
         $command = 'nohup peerflix '.$torrent.' -p '.$HOST->getPortStream().' > /dev/null 2>&1 & echo $!';
+        var_dump($command);
         exec($command ,$op);
         $pid = (int)$op[0];
         
+        $Movie->setPid($pid);
+   
+
+      if($isInTmp==false)  
+      {
+          array_push($movieList,$Movie);
+          $jsonContent = $serializer->serialize($movieList, 'json');
+          file_put_contents($tempory_folder.'/isipop.data', $jsonContent);
+      }
+       
         
-        
-                return $this->render('IsiPopSiteBundle:main:stream.html.twig',array(
+                return $this->render('IsiPopSiteBundle:Stream:stream.html.twig',array(
             'streamUrl'  => $HOST->getStreamUrl(),
             'subtitles' => $subtitles));
         
@@ -128,7 +182,7 @@ class StreamController extends Controller
         $pid = (int)$op[0];
         
         
-                return $this->render('IsiPopSiteBundle:main:stream.html.twig',array(
+                return $this->render('IsiPopSiteBundle:Stream:streamvlc.html.twig',array(
             'streamUrl'  => $HOST->getStreamUrl(),
             'subtitles' => null));
         

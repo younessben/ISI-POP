@@ -42,7 +42,17 @@ class Movie
      */
     private $url;
 
+     /**
+     * @var integer
+     */
+    private $pid;
+    
+     /**
+     * @var integer
+     */
+    private $port;
 
+    
     /**
      * Get id
      *
@@ -202,6 +212,53 @@ class Movie
     public function getUrl()
     {
         return $this->url;
+    }
+    
+        /**
+     * Set pid
+     *
+     * @param integer $pid
+     * @return Movie
+     */
+    public function setPid($pid)
+    {
+        $this->pid = $pid;
+
+        return $this;
+    }
+
+    /**
+     * Get pid
+     *
+     * @return integer 
+     */
+    public function getPid()
+    {
+        return $this->pid;
+    }
+    
+    
+          /**
+     * Set port
+     *
+     * @param integer $port
+     * @return Movie
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Get port
+     *
+     * @return integer 
+     */
+    public function getPort()
+    {
+        return $this->port;
     }
     
     public function getCleanTitle()

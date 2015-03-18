@@ -19,6 +19,7 @@ class Process{
 
     public function setPid($pid){
         $this->pid = $pid;
+        return $this;
     }
 
     public function getPid(){
