@@ -36,8 +36,23 @@ class Movie
      * @var string
      */
     private $imdb;
+    
+      /**
+     * @var string
+     */
+    private $url;
 
+     /**
+     * @var integer
+     */
+    private $pid;
+    
+     /**
+     * @var integer
+     */
+    private $port;
 
+    
     /**
      * Get id
      *
@@ -48,19 +63,20 @@ class Movie
         return $this->id;
     }
 
-       /**
-     * Set title
+     /**
+     * Set id
      *
-     * @param string $title
+     * @param integer $id
      * @return Movie
      */
     public function setId($id)
     {
-        $this->title = $id;
+        $this->id = $id;
 
         return $this;
     }
-    /**
+    
+     /**
      * Set title
      *
      * @param string $title
@@ -175,11 +191,82 @@ class Movie
         return $this->imdb;
     }
     
+     /**
+     * Set url
+     *
+     * @param string $url
+     * @return Movie
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string 
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+    
+        /**
+     * Set pid
+     *
+     * @param integer $pid
+     * @return Movie
+     */
+    public function setPid($pid)
+    {
+        $this->pid = $pid;
+
+        return $this;
+    }
+
+    /**
+     * Get pid
+     *
+     * @return integer 
+     */
+    public function getPid()
+    {
+        return $this->pid;
+    }
+    
+    
+          /**
+     * Set port
+     *
+     * @param integer $port
+     * @return Movie
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Get port
+     *
+     * @return integer 
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+    
     public function getCleanTitle()
     {
         $titleClean = $this->getTitle();
         
         $titleClean = str_replace(':','', $titleClean);
+        $titleClean = str_replace("'",'', $titleClean);
         $titleClean = str_replace(' ','_', $titleClean);
         
         return $titleClean;
@@ -189,4 +276,6 @@ class Movie
     {
         return urlencode($this->getCleanTitle());
     }
+   
+   
 }

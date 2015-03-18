@@ -36,47 +36,37 @@
           <ul class="nav navbar-nav">
             <li><a class="btn-primary" href="{{ path('isi_pop_site_homepage') }}">Movies</a></li>
             <li><a href="/shows">TV Shows</a></li>
+              <li><a  href="{{ path('isi_pop_site_other') }}">French</a></li>
           </ul>
-
-          <form class="navbar-form navbar-right" method="get" action="/" role="search">
+          <form class="navbar-form navbar-right" method="POST" action="{{ path('isi_pop_site_homepage_Form_search') }}" role="search">
             <div class="input-group">
-              <input name="search" type="text" class="form-control" placeholder="Search">
+              <input name="query" type="text" class="form-control" placeholder="Search">
               <span class="input-group-btn">
-                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                <button type="submit" name="toto" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
               </span>
             </div><!-- /input-group -->
           </form>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/?sort=date">Newest</a></li>
-            <li><a href="/?sort=seeds">Popular</a></li>
-            <li><a href="/?sort=rating">Highest Rated</a></li>
+            <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds" , 'page': 1 }) }}">Popular</a></li>
+            <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=rating" , 'page': 1 }) }}">Highest Rated</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 Genres <b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="/?genre=action&sort=seeds">Action</a></li>
-                <li><a href="/?genre=adventure&sort=seeds">Adventure</a></li>
-                <li><a href="/?genre=animation&sort=seeds">Animation</a></li>
-                <li><a href="/?genre=comedy&sort=seeds">Comedy</a></li>
-                <li><a href="/?genre=crime&sort=seeds">Crime</a></li>
-                <li><a href="/?genre=documentary&sort=seeds">Documentary</a></li>
-                <li><a href="/?genre=drama&sort=seeds">Drama</a></li>
-                <li><a href="/?genre=family&sort=seeds">Family</a></li>
-                <li><a href="/?genre=fantasy&sort=seeds">Fantasy</a></li>
-                <li><a href="/?genre=film-noir&sort=seeds">Film-Noir</a></li>
-                <li><a href="/?genre=histoy&sort=seeds">History</a></li>
-                <li><a href="/?genre=horror&sort=seeds">Horror</a></li>
-                <li><a href="/?genre=music&sort=seeds">Music</a></li>
-                <li><a href="/?genre=musical&sort=seeds">Musical</a></li>
-                <li><a href="/?genre=mystery&sort=seeds">Mystery</a></li>
-                <li><a href="/?genre=romance&sort=seeds">Romance</a></li>
-                <li><a href="/?genre=sci-fi&sort=seeds">Sci-Fi</a></li>
-                <li><a href="/?genre=sport&sort=seeds">Sport</a></li>
-                <li><a href="/?genre=thriller&sort=seeds">Thriller</a></li>
-                <li><a href="/?genre=war&sort=seeds">War</a></li>
-                <li><a href="/?genre=western&sort=seeds">Western</a></li>
+                <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=Action" , 'page': 1 }) }}">Action</a></li>
+                
+                 <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=adventure" , 'page': 1 }) }}">Adventure</a></li>
+                  <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=animation" , 'page': 1 }) }}">Animation</a></li>
+                   <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=comedy" , 'page': 1 }) }}">Comedy</a></li>
+                    <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=crime" , 'page': 1 }) }}">Crime</a></li>
+                     <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=documentary" , 'page': 1 }) }}">Documentary</a></li>
+                      <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=sci-fi" , 'page': 1 }) }}">Sci-fi</a></li>
+                       <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=horror" , 'page': 1 }) }}">Horror</a></li>
+                        <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=sport" , 'page': 1 }) }}">Sport</a></li>
+                         <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=war" , 'page': 1 }) }}">War</a></li>
+                          <li><a href="{{ path('isi_pop_site_homepage', {'search': "&sort_by=seeds&genre=western" , 'page': 1 }) }}">Western</a></li>
               </ul>
             </li>
             <li class="dropdown">

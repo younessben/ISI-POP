@@ -3,34 +3,44 @@
 {% block container %}
 <div id="movies">
     <div class="row">
+{% for movie in movies %}
+    
+    
         <div class="col-sm-4">  
 		
 		<div class="panel panel-default">
 		<div class="panel-heading">
-		<h3 class="panel-title">TITRE DU FILM</h3></div>
+                    <h3 class="panel-title">{{ movie.title }}</h3></div>
 		<div class="panel-body">
         
 		<div class="media movie">
-        <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].TorrentUrl) %>">
-        <img class="media-object" src="<%= movies[i].medium_cover_image %>" alt="<%= movies[i].title %>"></a>
+        <a class="pull-left" href="{{ path('isi_pop_site_stream_yts' , {'id': movie.id , 'url': movie.url }) }}">
+        <img class="media-object" src="{{ movie.cover }}" alt="{{ movie.title }}"></a>
 		
 		<div class="media-body">
-		<p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_stream_yts' , {'id': 3  , 'url': "abc" }) }}" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
-        <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?http://www.imdb.com/title/<%= movies[i].imdb_code %>" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
+		<p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_stream_yts' , {'id': movie.id , 'url': movie.url }) }}" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+        <p><a class="btn btn-xs btn-default" href="http://www.imdb.com/title/{{ movie.imdb }}" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
 
 		<div class="well well-sm">
-		Rating: NOTE<br>
-		Genre: GENRE<br>
-		Health: <span class="label label-default">S: NB SEED</span> <span class="label label-default">P: NBPEER</span>
+                Health: <span class="label label-default">S: {{ movie.Seeds }} </span> <span class="label label-default">P: {{ movie.peers}} </span>
 		</div>
 		
 		</div></div></div></div></div>
 
-        </div><div class="row">
+                 {% endfor %}
+     {% if movies|length == 0 %}
+     </div><div class="row">
     <p class="lead">No results found.</p>
+     {% endif %}
+   
 </div>
+       
 <ul class="pager">
-  <li class="previous "><a href="">&larr; Previous</a></li>
-  <li class="next "><a href="">Next &rarr;</a></li>
+      {% if movies|length != 0 and  CurrentPage-1!=0 %}
+           <li class="previous "><a href="{{ path('isi_pop_site_homepage' , {'page': CurrentPage-1  , 'search': Search }) }}">&larr; Previous</a></li>
+     {% endif %}
+       {% if movies|length == 18 %}
+         <li class="next "><a href="{{ path('isi_pop_site_homepage' , {'page': CurrentPage+1  , 'search': Search }) }}">Next &rarr;</a></li>
+     {% endif %}
 </ul>
 {% endblock %}

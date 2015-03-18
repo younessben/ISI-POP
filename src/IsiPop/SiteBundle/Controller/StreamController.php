@@ -3,41 +3,48 @@
 namespace IsiPop\SiteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use \Httpful\Request;
-
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use IsiPop\SiteBundle\Entity\Host;
-use IsiPop\SiteBundle\Entity\Process;
 use IsiPop\SiteBundle\Entity\Movie;
 use IsiPop\SiteBundle\Entity\Subtitle;
 
-class StreamController extends Controller
-{
-    public function ytsAction($id,$url)
-    {   
+class StreamController extends Controller {
+
+    public function ytsAction($id, $url) {
+        // define serializer
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        // Decode URL Torrent
         $torrent = urldecode($url);
-        // Data test only
-        // Bilbo 3
-        $id = 3792;
-        $torrent = "https://yts.re/torrent/download/EA974AA1432B16C764DA618453CEBCFF7812EAAD.torrent";
-        
+
+        // Get tempory folder
+        $tempory_folder = sys_get_temp_dir();
+
+
         // Create a host object
         $HOST = new Host();
         $HOST->setHostname($this->getRequest()->getHost());
         $HOST->setPortHost($this->getRequest()->getPort());
         $HOST->setPortStream(8889, 8999);
-        
+
+        // Get tempory file
         // Get Movie information
-        $uri = "https://yts.re/api/v2/movie_details.json?with_images=true&movie_id=".$id;
+        $uri = "https://yts.re/api/v2/movie_details.json?with_images=true&movie_id=" . $id;
         $response = Request::get($uri)->send();
-        
-        if($response->body->status == "error")
-        {
+
+        if ($response->body->status == "error") {
             $messageError = "L'id du film n'a pas été trouvé";
-             return $this->render('IsiPopSiteBundle:layouts:errors.html.twig',array(
-             'errorMessage'  => $messageError))  ;
+            return $this->render('IsiPopSiteBundle:layouts:errors.html.twig', array(
+                        'errorMessage' => $messageError));
         }
-        
+
         $Movie = new Movie();
         $Movie->setId($id);
         $Movie->setTitle($response->body->data->title);
@@ -45,101 +52,157 @@ class StreamController extends Controller
         $Movie->setPeers($response->body->data->torrents[0]->peers);
         $Movie->setCover($response->body->data->images->medium_cover_image);
         $Movie->setImdb($response->body->data->imdb_code);
-        
-        
+        $Movie->setUrl($torrent);
+        $Movie->setPort($HOST->getPortStream());
+
+        // define tempory file
+        $tempory_movie_data = $tempory_folder . '/isipop.data';
+        $movieList = [];
+        $isInTmp = false;
+        if (file_exists($tempory_movie_data)) {
+            $json = file_get_contents($tempory_movie_data);
+            $jsondecode = json_decode($json);
+            foreach ($jsondecode as $jsons) {
+                $Movietmp = $serializer->deserialize(json_encode($jsons), 'IsiPop\SiteBundle\Entity\Movie', 'json');
+                array_push($movieList, $Movietmp);
+
+                if ($Movietmp->getUrl() == $torrent) {
+                    // this file is always in stream
+                    $Movie = $Movietmp;
+                    $isInTmp = true;
+                    $HOST->setPortStream2($Movie->getPort());
+                }
+            }
+        }
+
+
         // Get subtitles
         $subtitles = [];
         // GET IMDB CODE
         $Imdb = $Movie->getImdb();
-        
-        $uri = "http://api.yifysubtitles.com/subs/".$Imdb;
-        $response = Request::get($uri)->send();            
-        
-        if(isset($response->body->subs->$Imdb))
-        {  
-        
-        $listSubtitles = $response->body->subs->$Imdb;
-        
-        
-        $tempory_folder = sys_get_temp_dir();
-        $tmpZip = $tempory_folder."/TMP.ZIP";
-        
-        foreach ($listSubtitles as $key => $val) {
-            // Define Subtitle Information
-            $subtitle = new Subtitle();
-            $subtitle->setLang($key);
-            $subtitle->setUrlFile("http://www.yifysubtitles.com/".$val[0]->url);
-            $subtitle->setDirectoryEncode("subtitles/".$Movie->getCleanTitle()."/");
-            $subtitle->setDirectoryNoEncode("subtitles/".$Movie->getCleanTitleEncode()."/");
-            
-            file_put_contents($tmpZip, fopen($subtitle->getUrlFile(), 'r')); // on recupere le fichier zip
-                
-            $zip = new  \ZipArchive;
-                if ($zip->open($tmpZip) === true) 
-                    {
-                        for($i = 0; $i < $zip->numFiles; $i++) 
-                        {
-                            $filename = $zip->getNameIndex($i);               
-                            if(substr(strrchr($filename,'.'),1) == "srt")
-                            {
-                                // on verifie que le repertoire des sous-titres existes sinon on le créer
-                                if (!file_exists($subtitle->getDirectoryNoEncode())) {
+
+        $uri = "http://api.yifysubtitles.com/subs/" . $Imdb;
+        $response = Request::get($uri)->send();
+
+        if (isset($response->body->subs->$Imdb)) {
+
+            $listSubtitles = $response->body->subs->$Imdb;
+
+
+
+            $tmpZip = $tempory_folder . "/TMP.ZIP";
+
+            foreach ($listSubtitles as $key => $val) {
+                // Define Subtitle Information
+                $subtitle = new Subtitle();
+                $subtitle->setLang($key);
+                $subtitle->setUrlFile("http://www.yifysubtitles.com/" . $val[0]->url);
+                $subtitle->setDirectoryEncode("subtitles/" . $Movie->getCleanTitle() . "/");
+                $subtitle->setDirectoryNoEncode("subtitles/" . $Movie->getCleanTitleEncode() . "/");
+
+                file_put_contents($tmpZip, fopen($subtitle->getUrlFile(), 'r')); // on recupere le fichier zip
+
+                $zip = new \ZipArchive;
+                if ($zip->open($tmpZip) === true) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        $filename = $zip->getNameIndex($i);
+                        if (substr(strrchr($filename, '.'), 1) == "srt") {
+                            // on verifie que le repertoire des sous-titres existes sinon on le créer
+                            if (!file_exists($subtitle->getDirectoryNoEncode())) {
                                 mkdir($subtitle->getDirectoryNoEncode(), 0777, true);
-                                }
-                                
-                                // si le fichier sous-titre n'existe pas on le copy
-                              if(!file_exists($subtitle->getFile()))
-                            copy("zip://".$tmpZip."#".$filename, $subtitle->getFile()); 
                             }
-                        }                  
-                    $zip->close(); 
+
+                            // si le fichier sous-titre n'existe pas on le copy
+                            if (!file_exists($subtitle->getFile()))
+                                copy("zip://" . $tmpZip . "#" . $filename, $subtitle->getFile());
+                        }
                     }
-                    $subtitle->setUrlStream($HOST->getHostUrl()."/".$subtitle->getFile());
-                    array_push($subtitles,$subtitle);
+                    $zip->close();
+                }
+                $subtitle->setUrlStream($HOST->getHostUrl() . "/" . $subtitle->getFile());
+                array_push($subtitles, $subtitle);
             }
-        
         }
-        
-           
 
-        // TODO Create command for windows and linux compatible
-        // execute Command
-        // Windows usage debug
-      //$Process = new \Symfony\Component\Process\ProcessBuilder(array('C:\Program Files\nodejs\peerflix.cmd' ,$torrent,'-p '. $HOST->getPortStream()));
-       
-        
-        
-        // linux command
-     //  $Process = new \Symfony\Component\Process\ProcessBuilder(array('nohup','peerflix' ,$torrent,'-p '. $HOST->getPortStream(),'> /dev/null 2>&1 & echo $!'));
-    //   $Process->getProcess()->start();          
-      
-    
-    //   while($Process->getProcess()->isRunning()) {}
-       
-       
-      
-       
-        
-        $command = 'nohup peerflix '.$torrent.' -p '.$HOST->getPortStream().' > /dev/null 2>&1 & echo $!';
-        exec($command ,$op);
-        $pid = (int)$op[0];
-        
-        
-                return $this->render('IsiPopSiteBundle:main:stream.html.twig',array(
-            'streamUrl'  => $HOST->getStreamUrl(),
-            'subtitles' => $subtitles));
-        
-        
+
+
+
+
+        if ($isInTmp == false) {
+            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            exec($command, $op);
+            $pid = (int) $op[0];
+
+            $Movie->setPid($pid);
+
+            array_push($movieList, $Movie);
+            $jsonContent = $serializer->serialize($movieList, 'json');
+            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
+        }
+
+
+        return $this->render('IsiPopSiteBundle:Stream:stream.html.twig', array(
+                    'streamUrl' => $HOST->getStreamUrl(),
+                    'subtitles' => $subtitles));
     }
-}
 
-   // return $this->render('IsiPopSiteBundle:layouts:errors.html.twig',array(
-        //    'errorMessage'  => 'Error message to display'))  ;
-        
-        // TEST PORT RETURN TO SHOW ERROR
-        /*
-         * if($port==-1)
-         * {
-         * NO PORT AVAILABLE
-         * }
-         */
+    public function OtherAction($id, $url) {
+        $torrent = urldecode($url);
+        $tempory_folder = sys_get_temp_dir();
+
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        // Create a host object
+        $HOST = new Host();
+        $HOST->setHostname($this->getRequest()->getHost());
+        $HOST->setPortHost($this->getRequest()->getPort());
+        $HOST->setPortStream(8889, 8999);
+
+        $Movie = new Movie();
+        $Movie->setId($id);
+        $Movie->setUrl($torrent);
+        $Movie->setPort($HOST->getPortStream());
+
+        // define tempory file
+        $tempory_movie_data = $tempory_folder . '/isipop.data';
+        $movieList = [];
+        $isInTmp = false;
+        if (file_exists($tempory_movie_data)) {
+            $json = file_get_contents($tempory_movie_data);
+            $jsondecode = json_decode($json);
+            foreach ($jsondecode as $jsons) {
+                $Movietmp = $serializer->deserialize(json_encode($jsons), 'IsiPop\SiteBundle\Entity\Movie', 'json');
+                array_push($movieList, $Movietmp);
+
+                if ($Movietmp->getUrl() == $torrent) {
+                    // this file is always in stream
+                    $Movie = $Movietmp;
+                    $isInTmp = true;
+                    $HOST->setPortStream2($Movie->getPort());
+                }
+            }
+        }
+
+
+        if ($isInTmp == false) {
+            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            exec($command, $op);
+            $pid = (int) $op[0];
+
+            $Movie->setPid($pid);
+
+            array_push($movieList, $Movie);
+            $jsonContent = $serializer->serialize($movieList, 'json');
+            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
+        }
+
+
+        return $this->render('IsiPopSiteBundle:Stream:streamvlc.html.twig', array(
+                    'streamUrl' => $HOST->getStreamUrl(),
+                    'subtitles' => null));
+    }
+
+}

@@ -1,10 +1,39 @@
 isi_pop_site_homepage:
-    path:     /
-    defaults: { _controller: IsiPopSiteBundle:Yts:index }
-    
+    path:     /{page}/{search}
+    defaults: { _controller: IsiPopSiteBundle:Yts:index , page: 1 , search: ''}
+    requirements:
+        _method: GET
+        page: \d+
+
+isi_pop_site_other:
+    path:     /other/
+    defaults: { _controller: IsiPopSiteBundle:Other:index }
+    requirements:
+        _method: GET
+        page: \d+
+
+isi_pop_site_homepage_Form_search:
+    path:   /form/
+    defaults: { _controller: IsiPopSiteBundle:Yts:searchForm }
+    requirements:
+        _method: POST
+
 isi_pop_site_stream_yts:
-    path: /stream/yts/{id}-{url}
+    path: /stream/yts/{id}/{url}
     defaults: { _controller: IsiPopSiteBundle:Stream:yts }
     requirements:
         _method:  GET
         id:  \d+
+        
+isi_pop_site_stream_other:
+    path: /stream/other/{id}/{url}
+    defaults: { _controller: IsiPopSiteBundle:Stream:other }
+    requirements:
+        _method:  GET
+        id:  \d+
+        
+
+        
+
+      
+        

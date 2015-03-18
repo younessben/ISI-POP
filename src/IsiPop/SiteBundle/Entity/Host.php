@@ -68,6 +68,13 @@ class Host
 
         return $this;
     }
+    
+       public function setPortStream2($port)
+    {
+        $this->portStream = $port;
+
+        return $this;
+    }
 
     /**
      * Get portStream
