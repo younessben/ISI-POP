@@ -169,7 +169,6 @@ class StreamController extends Controller
     public function OtherAction($id,$url)
     {   
         $torrent = urldecode($url);
-        $torrent = "https://www.t411.io/torrents/download/?id=5124496";
         
         // Create a host object
         $HOST = new Host();
