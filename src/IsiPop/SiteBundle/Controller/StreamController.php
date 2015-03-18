@@ -141,19 +141,21 @@ class StreamController extends Controller
         }
         
         
+        
+   
+
+      if($isInTmp==false)  
+      {
         $command = 'nohup peerflix '.$torrent.' -p '.$HOST->getPortStream().' > /dev/null 2>&1 & echo $!';
         var_dump($command);
         exec($command ,$op);
         $pid = (int)$op[0];
         
         $Movie->setPid($pid);
-   
-
-      if($isInTmp==false)  
-      {
-          array_push($movieList,$Movie);
-          $jsonContent = $serializer->serialize($movieList, 'json');
-          file_put_contents($tempory_folder.'/isipop.data', $jsonContent);
+        
+        array_push($movieList,$Movie);
+        $jsonContent = $serializer->serialize($movieList, 'json');
+        file_put_contents($tempory_folder.'/isipop.data', $jsonContent);
       }
        
         
