@@ -184,25 +184,25 @@ class StreamController extends Controller {
                     $HOST->setPortStream2($Movie->getPort());
                 }
             }
-
-
-            if ($isInTmp == false) {
-                $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
-                exec($command, $op);
-                $pid = (int) $op[0];
-
-                $Movie->setPid($pid);
-
-                array_push($movieList, $Movie);
-                $jsonContent = $serializer->serialize($movieList, 'json');
-                file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
-            }
-
-
-            return $this->render('IsiPopSiteBundle:Stream:streamvlc.html.twig', array(
-                        'streamUrl' => $HOST->getStreamUrl(),
-                        'subtitles' => null));
         }
+
+
+        if ($isInTmp == false) {
+            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            exec($command, $op);
+            $pid = (int) $op[0];
+
+            $Movie->setPid($pid);
+
+            array_push($movieList, $Movie);
+            $jsonContent = $serializer->serialize($movieList, 'json');
+            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
+        }
+
+
+        return $this->render('IsiPopSiteBundle:Stream:streamvlc.html.twig', array(
+                    'streamUrl' => $HOST->getStreamUrl(),
+                    'subtitles' => null));
     }
 
 }
