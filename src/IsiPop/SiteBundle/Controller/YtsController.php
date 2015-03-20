@@ -10,7 +10,7 @@ class YtsController extends Controller
 {
     public function indexAction($page,$search)
     {
-        $uri = "https://yts.re/api/v2/list_movies.json?limit=18&quality=720p";
+        $uri = "https://yts.to/api/v2/list_movies.json?limit=18&quality=720p";
         $uri.=$search;
         $uri.="&page=".$page;
         return $this->ReturnMovieList($uri,$page,$search);
