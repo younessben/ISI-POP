@@ -1,29 +1,44 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"><%= episode.title %></h3>
+    <h3 class="panel-title">{{ show.seasons[i][j].title }}</h3>
   </div>
   <div class="panel-body">
     <div class="media show">
       <div class="media-body">
-        <p class="lead">Season <%= episode.season %> - Episode <%= episode.episode %></p>
-        <p><%= moment(episode.first_aired * 1000).format('LL') %></p>
-        <p><%= episode.overview %></p>
-        <% if (episode.torrents && Object.keys(episode.torrents).length > 0) { %>
+        <p class="lead">Season {{ show.seasons[i][j].season }} - Episode {{ show.seasons[i][j].episode }}</p>
+   
+        <p>{{ show.seasons[i][j].overview }}</p>
 	  <br/>
-          <% for (var k in episode.torrents) { %>
-            <div class="text-center">
+          {% if (show.seasons[i][j].defaultUrl) %}
+               <div class="text-center">
               <p>
-                <a class="btn btn-block btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= imdb_id %>&show=1&season=<%= episode.season %>&episode=<%= episode.episode %>&file=<%= encodeURIComponent(episode.torrents[k].url) %>">
+                <a class="btn btn-block btn-sm btn-warning" href="baseURL/stream?id=show.imbd &show=L }}1&season={{ show.seasons[i][j].season }}&episode={{ show.seasons[i][j].episode }}&file={{ show.seasons[i][j].defaultUrl }}">
                   <span class="glyphicon glyphicon-play"></span>
 		  WATCH EPISODE
-		  <% if (k != 0 && k != '0') { %>
-		    (<%= k %>)
-		  <% } %>
 		</a>
               </p>
             </div>
-          <% } %>
-        <% } %>
+          {% endif %}
+           {% if (show.seasons[i][j].midUrl) %}
+               <div class="text-center">
+              <p>
+                <a class="btn btn-block btn-sm btn-warning" href="/stream?id=show.imbd &show=1&season={{ show.seasons[i][j].season }}&episode={{ show.seasons[i][j].episode }}&file={{ show.seasons[i][j].midUrl }}">
+                  <span class="glyphicon glyphicon-play"></span>
+		  WATCH EPISODE (480p)
+		</a>
+              </p>
+            </div>
+          {% endif %}
+           {% if (show.seasons[i][j].highUrl) %}
+               <div class="text-center">
+              <p>
+                <a class="btn btn-block btn-sm btn-warning" href="baseURL/stream?id=show.imbd &show=1&season={{ show.seasons[i][j].season }}&episode={{ show.seasons[i][j].episode }}&file={{ show.seasons[i][j].highUrl }}">
+                  <span class="glyphicon glyphicon-play"></span>
+		  WATCH EPISODE (720p)
+		</a>
+              </p>
+            </div>
+          {% endif %}
       </div>
     </div>
   </div>

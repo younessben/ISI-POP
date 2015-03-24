@@ -1,43 +1,45 @@
+{% extends 'IsiPopSiteBundle:layouts:layout_shows.html.twig' %}
+
+{% block container %}
 <div class="row">
   <div class="col-sm-12">
     <div class="jumbotron align-center">
-      <img src="<%= show.images.banner %>" alt="<%= show.title %>" />
+      <img src="{{ show.banner }}" alt="{{ show.title }}" />
     </div>
   </div>
 </div>
 
 <div class="panel-group" id="show">
-  <% if (seasons && seasons.length > 0) { %>
-    <% for (var i=0; i < seasons.length; i++) { %>
+  {% if (show.seasons and show.seasons|length > 0)%}
+    {% for i in 0..show.seasons|length-1 %}
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#show" href="#season-<%= i + 1 %>">
-              Season <%= i + 1 %>
+            <a data-toggle="collapse" data-parent="#show" href="#season-{{ i + 1 }}">
+              Season {{ i + 1 }}
             </a>
           </h4>
         </div>
         <div id="season-" class="panel-collapse collapse">
           <div class="panel-body">
             <div class="row">
-              <% if (seasons[i] && seasons[i].length > 0) { %>
-                <% for (var j=0; j < seasons[i].length; j++) { %>
-                    <% var season = i+1; %>
-                    <% var episode = j+1; %>
+              {% if (show.seasons[i] and show.seasons[i]|length > 0) %}
+                {% for j in 0..show.seasons[i]|length-1 %}
                     <div class="col-sm-4">
-                      <%= partial('episode', {episode: seasons[i][j], baseURL: baseURL, imdb_id: show.imdb_id, moment: moment}); %>
+                      {{ include('IsiPopSiteBundle:shows:episode.html.twig') }}
                     </div>
-                    <% if (j % 3 === 2) { %>
+                    {% if (j % 3 == 2) %}
                       </div><div class="row">
-                    <% } %>
-                <% } %>
-              <% } %>
+                    {% endif %}
+                {% endfor %}
+              {% endif %}
             </div>
           </div>
         </div>
       </div>
-    <% } %>
-  <% } else { %>
+    {% endfor %}
+  {% else %}
     <p class="lead">No results found.</p>
-  <% } %>
+  {% endif %}
 </div>
+{% endblock %}
