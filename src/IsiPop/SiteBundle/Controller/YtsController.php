@@ -14,8 +14,6 @@ class YtsController extends Controller
         $uri.=$search;
         $uri.="&page=".$page;
         return $this->ReturnMovieList($uri,$page,$search);
-        
-
     }
     
     public function searchFormAction()
