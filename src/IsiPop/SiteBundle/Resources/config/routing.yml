@@ -9,3 +9,16 @@ isi_pop_site_stream_yts:
         _method:  GET
         id:  \d+
         
+isi_pop_site_shows:
+    path:     /shows
+    defaults: { _controller: IsiPopSiteBundle:Show:index }
+    
+isi_pop_site_show_season:
+    path:     /shows/season/{id}
+    defaults: { _controller: IsiPopSiteBundle:Show:show }
+    requirements:
+        _method:  GET
+        
+isi_pop_site_show_episode:
+    path:     /shows/season/{id}
+    defaults: { _controller: IsiPopSiteBundle:Show:show }

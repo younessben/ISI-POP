@@ -10,7 +10,7 @@ class YtsController extends Controller
 {
     public function indexAction()
     {
-        $uri = "https://yts.re/api/v2/list_movies.json?limit=18&quality=720p&sort_by=";
+        $uri = "https://yts.to/api/v2/list_movies.json?limit=18&quality=720p&sort_by=";
         $response = Request::get($uri)->send();
         
         

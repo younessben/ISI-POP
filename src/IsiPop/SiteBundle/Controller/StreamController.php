@@ -26,7 +26,7 @@ class StreamController extends Controller
         $HOST->setPortStream(8889, 8999);
         
         // Get Movie information
-        $uri = "https://yts.re/api/v2/movie_details.json?with_images=true&movie_id=".$id;
+        $uri = "https://yts.to/api/v2/movie_details.json?with_images=true&movie_id=".$id;
         $response = Request::get($uri)->send();
         
         if($response->body->status == "error")
