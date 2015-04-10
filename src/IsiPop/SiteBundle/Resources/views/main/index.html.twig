@@ -45,7 +45,7 @@
 
     </div>
 
-    <ul class="pager">
+   <ul class="pager">
         {% if movies|length != 0 and  CurrentPage-1!=0 %}
             <li class="previous "><a href="{{ path('isi_pop_site_homepage' , {'page': CurrentPage-1  , 'search': Search }) }}">&larr; Previous</a></li>
             {% endif %}

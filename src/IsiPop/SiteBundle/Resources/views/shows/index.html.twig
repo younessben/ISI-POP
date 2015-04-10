@@ -36,8 +36,12 @@
         <p class="lead">No results found.</p>
     {% endif %}
 </div>
-<ul class="pager">
-  <li class="previous "><a href="<%= previousPage %>">&larr; Previous</a></li>
-  <li class="next "><a href="<%= nextPage %>">Next &rarr;</a></li>
-</ul>
+    <ul class="pager">
+        {% if shows|length != 0%}
+            <li class="previous "><a href="{{ path('isi_pop_site_shows' , {'page': 1  , 'search': "" }) }}">&larr; Previous</a></li>
+            {% endif %}
+            {% if shows|length == 50 %}
+            <li class="next "><a href="{{ path('isi_pop_site_shows' , {'page': 1  , 'search': "" }) }}">Next &rarr;</a></li>
+            {% endif %}
+    </ul>
 {% endblock %}

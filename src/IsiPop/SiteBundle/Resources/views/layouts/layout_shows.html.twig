@@ -18,7 +18,7 @@
             <li><a href="{{ path('isi_pop_site_homepage') }}">Movies</a></li>
             <li><a class="btn-primary" href="{{ path('isi_pop_site_shows') }}">TV Shows</a></li>
           </ul>
-          <form class="navbar-form navbar-right" method="get" action="/shows" role="search">
+          <form class="navbar-form navbar-right" method="POST" action="{{ path('isi_pop_site_show_Form_search') }}" role="search">
             <div class="input-group">
               <input name="search" type="text" class="form-control" placeholder="Search">
               <span class="input-group-btn">
@@ -28,7 +28,6 @@
           </form>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/shows?lastUpdated=1">Latest</a></li>
             <li><a href="/running">Now Playing</a></li>
           </ul>
         </div>

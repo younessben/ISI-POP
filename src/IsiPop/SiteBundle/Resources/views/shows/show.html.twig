@@ -15,18 +15,62 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#show" href="#season-{{ i + 1 }}">
+            <a data-toggle="collapse" data-parent="#show" href="#season-{{ i + 1}}">
               Season {{ i + 1 }}
             </a>
           </h4>
         </div>
-        <div id="season-" class="panel-collapse collapse">
+        <div id="season-{{ i + 1}}" class="panel-collapse collapse">
           <div class="panel-body">
             <div class="row">
               {% if (show.seasons[i] and show.seasons[i]|length > 0) %}
                 {% for j in 0..show.seasons[i]|length-1 %}
                     <div class="col-sm-4">
-                      {{ include('IsiPopSiteBundle:shows:episode.html.twig') }}
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h3 class="panel-title">{{ show.seasons[i][j].title }}</h3>
+                        </div>
+                        <div class="panel-body">
+                          <div class="media show">
+                            <div class="media-body">
+                              <p class="lead">Season {{ show.seasons[i][j].season }} - Episode {{ show.seasons[i][j].episode }}</p>
+
+                              <p>{{ show.seasons[i][j].overview }}</p>
+                                <br/>
+                                {% if (show.seasons[i][j].defaultUrl) %}
+                                     <div class="text-center">
+                                    <p>
+                                      <a class="btn btn-block btn-sm btn-warning" href="{{ path('isi_pop_site_show_stream' , {'id': show.id , 'url': show.seasons[i][j].defaultUrl, 'season' : i+1, 'episode' : j+1 }) }}" target="_blank">
+                                        <span class="glyphicon glyphicon-play"></span>
+                                        WATCH EPISODE
+                                      </a>
+                                    </p>
+                                  </div>
+                                {% endif %}
+                                 {% if (show.seasons[i][j].midUrl) %}
+                                     <div class="text-center">
+                                    <p>
+                                      <a class="btn btn-block btn-sm btn-warning" href="{{ path('isi_pop_site_show_stream' , {'id': show.id , 'url': show.seasons[i][j].midUrl, 'season' : i+1, 'episode' : j+1}) }}">
+                                        <span class="glyphicon glyphicon-play"></span>
+                                        WATCH EPISODE (480p)
+                                      </a>
+                                    </p>
+                                  </div>
+                                {% endif %}
+                                 {% if (show.seasons[i][j].highUrl) %}
+                                     <div class="text-center">
+                                    <p>
+                                      <a class="btn btn-block btn-sm btn-warning" href="{{ path('isi_pop_site_show_stream' , {'id': show.id , 'url': show.seasons[i][j].highUrl, 'season' : i+1, 'episode' : j+1 }) }}">
+                                        <span class="glyphicon glyphicon-play"></span>
+                                        WATCH EPISODE (720p)
+                                      </a>
+                                    </p>
+                                  </div>
+                                {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     {% if (j % 3 == 2) %}
                       </div><div class="row">

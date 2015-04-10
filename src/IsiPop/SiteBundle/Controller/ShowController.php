@@ -9,9 +9,10 @@ use IsiPop\SiteBundle\Entity\Episode;
 
 class ShowController extends Controller
 {
-    public function indexAction()
+    public function indexAction($page, $search)
     {
-        $uri = "http://eztvapi.re/shows/1";
+        $uri = "http://eztvapi.re/shows/";
+        $uri.=$page;
         $response = Request::get($uri)->send();
     
         $showList  = [];
@@ -62,13 +63,13 @@ class ShowController extends Controller
            foreach($e->torrents as $key => $tor)
            {
                 if ($key == '0'){
-                    $episode->setDefaultUrl($tor->url);
+                    $episode->setDefaultUrl(urlencode($tor->url));
                 }
                 if ($key == '480p'){
-                    $episode->setMidUrl($tor->url);
+                    $episode->setMidUrl(urlencode($tor->url));
                 }
                 if ($key == '720p'){
-                    $episode->setHighUrl($tor->url);
+                    $episode->setHighUrl(urlencode($tor->url));
                 }
            }
            
@@ -85,5 +86,10 @@ class ShowController extends Controller
             $show->setSeasons($episodes);
              return $this->render('IsiPopSiteBundle:shows:show.html.twig',array(
             'show'  => $show));
+    }
+    public function searchFormAction()
+    {
+        $search = $this->get('request')->request->get('query');
+        return $this->redirect( $this->generateUrl('isi_pop_site_shows', array('search' => '&query_term='.urlencode($search))));
     }
 }
