@@ -10,6 +10,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use IsiPop\SiteBundle\Entity\Host;
 use IsiPop\SiteBundle\Entity\Movie;
+use IsiPop\SiteBundle\Entity\Show;
+use IsiPop\SiteBundle\Entity\Episode;
 use IsiPop\SiteBundle\Entity\Subtitle;
 
 class StreamController extends Controller {
@@ -203,6 +205,57 @@ class StreamController extends Controller {
         return $this->render('IsiPopSiteBundle:Stream:streamvlc.html.twig', array(
                     'streamUrl' => $HOST->getStreamUrl(),
                     'subtitles' => null));
+    }
+    
+        public function ShowAction($id, $url, $season, $episode) {
+            
+        $tempory_folder = sys_get_temp_dir();
+            
+        // Create a host object
+        $HOST = new Host();
+        $HOST->setHostname($this->getRequest()->getHost());
+        $HOST->setPortHost($this->getRequest()->getPort());
+        $HOST->setPortStream(8889, 8999);
+        
+        $torrent = urldecode($url);
+        
+        // define tempory file
+//        $tempory_movie_data = $tempory_folder . '/isipop.data';
+//        $showList = [];
+        $isInTmp = false;
+//        if (file_exists($tempory_movie_data)) {
+//            $json = file_get_contents($tempory_movie_data);
+//            $jsondecode = json_decode($json);
+//            foreach ($jsondecode as $jsons) {
+//                $Showtmp = $serializer->deserialize(json_encode($jsons), 'IsiPop\SiteBundle\Entity\Show', 'json');
+//                array_push($showList, $Showtmp);
+//
+//                if ($Showtmp->getUrl() == $torrent) {
+//                    // this file is always in stream
+//                    $Movie = $Showtmp;
+//                    $isInTmp = true;
+//                    $HOST->setPortStream2($Movie->getPort());
+//                }
+//            }
+//        }
+
+
+        if ($isInTmp == false) {
+            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            exec($command, $op);
+//            $pid = (int) $op[0];
+//
+//            $Movie->setPid($pid);
+//
+//            array_push($showList, $Show);
+//            $jsonContent = $serializer->serialize($movieList, 'json');
+//            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
+        }
+        
+        return $this->render('IsiPopSiteBundle:Stream:stream.html.twig', array(
+            'streamUrl' => $HOST->getStreamUrl(),
+            'subtitles' => null));
+        
     }
 
 }
