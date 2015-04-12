@@ -1,0 +1,8 @@
+  <a href="{{ path('isipopph_pmain_add' ) }}" >Add</a> 
+{% for movie in movies %}
+        <li>{{ movie.id }}</li>
+      
+<a href="{{ path('isipopph_pmain_update' , {'id' : movie.id }) }}" >Update</a>
+<a href="{{ path('isipopph_pmain_delete', { 'id' : movie.id }) }}" >Delete</a>
+
+    {% endfor %}

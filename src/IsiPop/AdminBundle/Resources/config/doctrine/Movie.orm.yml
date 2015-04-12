@@ -1,0 +1,24 @@
+IsiPop\AdminBundle\Entity\Movie:
+    type: entity
+    table: null
+    repositoryClass: IsiPop\AdminBundle\Entity\MovieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 255
+        urlMovie:
+            type: string
+            length: 255
+        imdbCode:
+            type: string
+            length: 255
+        urlCover:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

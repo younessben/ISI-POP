@@ -1,3 +1,23 @@
-isi_pop_admin_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: IsiPopAdminBundle:Default:index }
+isipopph_pmain_default:
+    path:     /admin
+    defaults: { _controller: IsiPopAdminBundle:Movie:show }
+  
+isipopph_pmain_add:
+    path:     /add
+    defaults: { _controller: IsiPopAdminBundle:Movie:Add }
+    
+isipopph_pmain_update:
+    path:     /Update/{id}
+    defaults: { _controller: IsiPopAdminBundle:Movie:Update}
+    requirements:
+        id: \d+
+    
+isipopph_pmain_delete:
+    path:     /Delete/{id}
+    defaults: { _controller: IsiPopAdminBundle:Movie:Delete }
+    requirements:
+        id: \d+
+    
+
+    
+
