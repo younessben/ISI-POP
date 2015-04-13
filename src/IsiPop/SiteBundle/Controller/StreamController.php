@@ -251,18 +251,7 @@ class StreamController extends Controller {
         }
 
         if ($isInTmp == false) {
-<<<<<<< HEAD
-            $command = 'nohup peerflix "' . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
-            exec($command, $op);
-            var_dump($command);
-//            $pid = (int) $op[0];
-//
-//            $Movie->setPid($pid);
-//
-//            array_push($showList, $Show);
-//            $jsonContent = $serializer->serialize($movieList, 'json');
-//            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
-=======
+
             $command = 'nohup peerflix "'  . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
             exec($command, $op);
             $pid = (int) $op[0];
@@ -272,17 +261,13 @@ class StreamController extends Controller {
             array_push($movieList, $Movie);
             $jsonContent = $serializer->serialize($movieList, 'json');
             file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
->>>>>>> 30b035a0abef3d5d138a9b2c7c1566bedbc65ed7
         }
         
         $subtitles = [];
         return $this->render('IsiPopSiteBundle:Stream:stream.html.twig', array(
             'streamUrl' => $HOST->getStreamUrl(),
-<<<<<<< HEAD
-            'subtitles' => []));
-=======
             'subtitles' => $subtitles));
->>>>>>> 30b035a0abef3d5d138a9b2c7c1566bedbc65ed7
+
         
     }
 
