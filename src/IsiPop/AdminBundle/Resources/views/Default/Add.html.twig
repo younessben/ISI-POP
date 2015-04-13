@@ -1,4 +1,63 @@
-{{form(name)}}!
-<!-- <div class="well">
+{{ include('IsiPopAdminBundle:layouts:layout_header.html.twig') }}
+  <script>
+    function setTheme(theme) {
+      var today = new Date(), expires = new Date();
+      expires.setTime(today.getTime() + (365*24*60*60*1000)); //expires in one year
+      document.cookie="theme=" + theme + ";expires=" + expires.toGMTString();
+      document.getElementById('themeCss').href=theme;
+    }
+    $.get("http://api.bootswatch.com/3/", function (data) {
+      var themesList = document.getElementById('themes');
+
+      //Define the default theme
+      themesList.innerHTML += '<li ' +'onclick="setTheme(\'' + "//netdna.bootstrapcdn.com/bootswatch/latest/darkly/bootstrap.min.css" + '\')"><a href="#">Default (Darkly)</a></li>';
+      themesList.innerHTML += '<li class=divider </li>';
+
+      data.themes.forEach(function(value){
+        themesList.innerHTML += '<li ' +'onclick="setTheme(\'' + value.cssCdn + '\')">'  +  '<a href="#">' + value.name + '</a></li>';
+      });
+    });
+  </script>
+  <body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="btn-primary" href="{{ path('isi_pop_site_homepage') }}">Movies</a></li>
+              <li><a  href="{{ path('isi_pop_site_other') }}">French</a></li>
+            <li><a href="{{ path('isi_pop_site_shows') }}">TV Shows</a></li>
+            
+          </ul>
+         
+
+          <ul class="nav navbar-nav navbar-right">
+         
+            <li><a href="{{ path('isipopph_pmain_add' ) }}" >Add</a></li>
+            <li><a href="{{ path('isipopph_pmain_default') }}">Admin</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+        <div class="row">
   {{ form(name) }}
-</div> -->
+</div>
+    </div>
+       
+
+
+   
+  </body>
+{{ include('IsiPopAdminBundle:layouts:layout_footer.html.twig') }}
+

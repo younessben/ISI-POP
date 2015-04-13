@@ -75,7 +75,7 @@ class MovieController extends Controller
                 ->add('urlMovie', 'text')
                 ->add('imdbCode', 'text')
                 ->add('urlCover', 'text')
-                ->add('Add', 'submit')
+                ->add('Edit', 'submit')
                 ->getForm(); 
             
              $formBuilder->handleRequest($request);
@@ -99,7 +99,7 @@ class MovieController extends Controller
                }
                
                
-             return $this->render('IsiPopAdminBundle:Default:Update.html.twig', array(
+             return $this->render('IsiPopAdminBundle:Default:Add.html.twig', array(
                     'name' => $formBuilder->createView()
              
         ));

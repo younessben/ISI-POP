@@ -1,0 +1,47 @@
+{% extends 'IsiPopSiteBundle:layouts:layout_shows.html.twig' %}
+
+{% block container %}
+<div id="shows">
+    {% if (shows and shows|length > 0)%}
+    <div class="row">
+ {% for i in 0.. shows|length-1 %}
+        <div class="col-sm-4">
+      		<div class="panel panel-default">
+        		<div class="panel-heading">
+          		<h3 class="panel-title">{{ shows[i].title }}</h3></div>
+          		<div class="panel-body">
+            		<div class="media movie">
+                    <a class="pull-left" href="{{ path('isi_pop_site_show_season' , {'id': shows[i].id}) }}">
+                      <img class="media-object" src="{{ shows[i].poster }}" alt="{{ shows[i].title }}">
+                    </a>
+                		<div class="media-body">
+                		    <p><a class="btn btn-sm btn-warning" href="{{ path('isi_pop_site_show_season' , {'id': shows[i].id}) }}"><span class="glyphicon glyphicon-play"></span> VIEW SHOW</a></p>
+                        <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?http%3A%2F%2Fwww.imdb.com%2Ftitle%2F{{ shows[i].imbd }}" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
+			              <div class="well well-sm">
+          		          <p>Seasons: {{ shows[i].numSeasons }}</p>
+                        <p>Year: {{ shows[i].year }}</p>
+			              </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% if (i % 3 == 2)%}
+        </div><div class="row">
+        {% endif %}
+        {% endfor %}
+        </div>
+    
+    {% else %}
+        <p class="lead">No results found.</p>
+    {% endif %}
+</div>
+    <ul class="pager">
+        {% if shows|length != 0 and  CurrentPage-1!=0 %}
+            <li class="previous "><a href="{{ path('isi_pop_site_shows' , {'page': CurrentPage-1  , 'search': Search }) }}">&larr; Previous</a></li>
+        {% endif %}
+        {% if shows|length == 50 %}
+            <li class="next "><a href="{{ path('isi_pop_site_shows' , {'page': CurrentPage+1  , 'search': Search }) }}">Next &rarr;</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
