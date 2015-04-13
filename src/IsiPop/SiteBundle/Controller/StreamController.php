@@ -218,7 +218,7 @@ class StreamController extends Controller {
         $HOST->setPortStream(8889, 8999);
         
         $torrent = urldecode($url);
-        
+        var_dump($torrent);
         // define tempory file
 //        $tempory_movie_data = $tempory_folder . '/isipop.data';
 //        $showList = [];
@@ -254,7 +254,7 @@ class StreamController extends Controller {
         
         return $this->render('IsiPopSiteBundle:Stream:stream.html.twig', array(
             'streamUrl' => $HOST->getStreamUrl(),
-            'subtitles' => null));
+            'subtitles' => []));
         
     }
 
