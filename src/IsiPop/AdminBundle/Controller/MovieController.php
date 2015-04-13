@@ -41,7 +41,17 @@ class MovieController extends Controller
                      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
                        
                      // On redirige vers la page de visualisation de l'annonce nouvellement créée
-                     return $this->render('IsiPopAdminBundle:Default:validationAdd.html.twig', array('id' => $movie));
+                     
+                      $movie = $this->getDoctrine()
+                
+                     ->getManager()
+                     ->getRepository('IsiPopAdminBundle:Movie');
+                         $movies = $movie->findAll();
+                        // var_dump($movies);
+                         return $this->render('IsiPopAdminBundle:Default:show.html.twig', array('movies' => $movies));
+                   //  return $this->render('IsiPopAdminBundle:Default:validationAdd.html.twig', array('id' => $movie));
+                     
+                     
                }
         return $this->render('IsiPopAdminBundle:Default:Add.html.twig', array(
                     'name' => $form->createView()

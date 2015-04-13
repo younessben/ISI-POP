@@ -3,17 +3,17 @@ isipopph_pmain_default:
     defaults: { _controller: IsiPopAdminBundle:Movie:show }
   
 isipopph_pmain_add:
-    path:     /add
+    path:     /admin/add
     defaults: { _controller: IsiPopAdminBundle:Movie:Add }
     
 isipopph_pmain_update:
-    path:     /Update/{id}
+    path:     /admin/update/{id}
     defaults: { _controller: IsiPopAdminBundle:Movie:Update}
     requirements:
         id: \d+
     
 isipopph_pmain_delete:
-    path:     /Delete/{id}
+    path:     /admin/delete/{id}
     defaults: { _controller: IsiPopAdminBundle:Movie:Delete }
     requirements:
         id: \d+
