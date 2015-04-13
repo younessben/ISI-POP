@@ -241,8 +241,9 @@ class StreamController extends Controller {
 
 
         if ($isInTmp == false) {
-            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            $command = 'nohup peerflix "' . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
             exec($command, $op);
+            var_dump($command);
 //            $pid = (int) $op[0];
 //
 //            $Movie->setPid($pid);
@@ -254,7 +255,7 @@ class StreamController extends Controller {
         
         return $this->render('IsiPopSiteBundle:Stream:stream.html.twig', array(
             'streamUrl' => $HOST->getStreamUrl(),
-            'subtitles' => null));
+            'subtitles' => []));
         
     }
 
