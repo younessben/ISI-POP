@@ -131,7 +131,7 @@ class StreamController extends Controller {
 
 
         if ($isInTmp == false) {
-            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            $command = 'nohup peerflix "' . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
             exec($command, $op);
             $pid = (int) $op[0];
 
@@ -190,7 +190,7 @@ class StreamController extends Controller {
 
 
         if ($isInTmp == false) {
-            $command = 'nohup peerflix ' . $torrent . ' -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            $command = 'nohup peerflix "' . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
             exec($command, $op);
             $pid = (int) $op[0];
 
@@ -207,8 +207,14 @@ class StreamController extends Controller {
                     'subtitles' => null));
     }
     
-        public function ShowAction($id, $url, $season, $episode) {
+    public function ShowAction($id, $url, $season, $episode) {
             
+        // define serializer
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);    
+        
         $tempory_folder = sys_get_temp_dir();
             
         // Create a host object
@@ -218,29 +224,34 @@ class StreamController extends Controller {
         $HOST->setPortStream(8889, 8999);
         
         $torrent = urldecode($url);
+
+        $Movie = new Movie();
+        $Movie->setId($id);
+        $Movie->setUrl($torrent);
+        $Movie->setPort($HOST->getPortStream());
         
         // define tempory file
-//        $tempory_movie_data = $tempory_folder . '/isipop.data';
-//        $showList = [];
+        $tempory_movie_data = $tempory_folder . '/isipop.data';
+        $movieList = [];
         $isInTmp = false;
-//        if (file_exists($tempory_movie_data)) {
-//            $json = file_get_contents($tempory_movie_data);
-//            $jsondecode = json_decode($json);
-//            foreach ($jsondecode as $jsons) {
-//                $Showtmp = $serializer->deserialize(json_encode($jsons), 'IsiPop\SiteBundle\Entity\Show', 'json');
-//                array_push($showList, $Showtmp);
-//
-//                if ($Showtmp->getUrl() == $torrent) {
-//                    // this file is always in stream
-//                    $Movie = $Showtmp;
-//                    $isInTmp = true;
-//                    $HOST->setPortStream2($Movie->getPort());
-//                }
-//            }
-//        }
+        if (file_exists($tempory_movie_data)) {
+            $json = file_get_contents($tempory_movie_data);
+            $jsondecode = json_decode($json);
+            foreach ($jsondecode as $jsons) {
+                $Movietmp = $serializer->deserialize(json_encode($jsons), 'IsiPop\SiteBundle\Entity\Movie', 'json');
+                array_push($movieList, $Movietmp);
 
+                if ($Movietmp->getUrl() == $torrent) {
+                    // this file is always in stream
+                    $Movie = $Movietmp;
+                    $isInTmp = true;
+                    $HOST->setPortStream2($Movie->getPort());
+                }
+            }
+        }
 
         if ($isInTmp == false) {
+<<<<<<< HEAD
             $command = 'nohup peerflix "' . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
             exec($command, $op);
             var_dump($command);
@@ -251,11 +262,27 @@ class StreamController extends Controller {
 //            array_push($showList, $Show);
 //            $jsonContent = $serializer->serialize($movieList, 'json');
 //            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
+=======
+            $command = 'nohup peerflix "'  . $torrent . '" -p ' . $HOST->getPortStream() . ' > /dev/null 2>&1 & echo $!';
+            exec($command, $op);
+            $pid = (int) $op[0];
+
+            $Movie->setPid($pid);
+
+            array_push($movieList, $Movie);
+            $jsonContent = $serializer->serialize($movieList, 'json');
+            file_put_contents($tempory_folder . '/isipop.data', $jsonContent);
+>>>>>>> 30b035a0abef3d5d138a9b2c7c1566bedbc65ed7
         }
         
+        $subtitles = [];
         return $this->render('IsiPopSiteBundle:Stream:stream.html.twig', array(
             'streamUrl' => $HOST->getStreamUrl(),
+<<<<<<< HEAD
             'subtitles' => []));
+=======
+            'subtitles' => $subtitles));
+>>>>>>> 30b035a0abef3d5d138a9b2c7c1566bedbc65ed7
         
     }
 

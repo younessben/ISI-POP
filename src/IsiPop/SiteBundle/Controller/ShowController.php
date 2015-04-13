@@ -11,10 +11,20 @@ class ShowController extends Controller
 {
     public function indexAction($page, $search)
     {
-        $uri = "http://eztvapi.re/shows/";
-        $uri.=$page;
-        $response = Request::get($uri)->send();
-    
+        if ($search =="")
+        {
+            $uri = "http://eztvapi.re/shows/";
+            $uri.=$page;
+            $response = Request::get($uri)->send();
+        }
+        else
+        {
+            $uri = "http://eztvapi.re/shows/search/";
+            $uri.=$search;
+            $uri.="/all";
+            $response = Request::get($uri)->send();  
+        }
+        
         $showList  = [];
     
         foreach($response->body as $s)
@@ -32,7 +42,9 @@ class ShowController extends Controller
        }
 
              return $this->render('IsiPopSiteBundle:shows:index.html.twig',array(
-            'shows'  => $showList));
+            'shows'  => $showList,
+            'CurrentPage' => $page,
+            'Search' => $search));
     }
     
     public function showAction($id)
@@ -90,6 +102,7 @@ class ShowController extends Controller
     public function searchFormAction()
     {
         $search = $this->get('request')->request->get('query');
-        return $this->redirect( $this->generateUrl('isi_pop_site_shows', array('search' => '&query_term='.urlencode($search))));
+        return $this->redirect( $this->generateUrl('isi_pop_site_shows', array('search' => urlencode($search))));
     }
+    
 }
